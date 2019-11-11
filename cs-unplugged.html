@@ -37,9 +37,6 @@
                 this.template = activity_template_name;
             }
             createActivity(title, description, link){
-                console.log(title);
-                console.log(description);
-                console.log(link);
                 var activity = $("#" + this.template).clone();
                 var id = activity.attr("id") + getRandomInt(0, 1000000);
                 var collapse_id = getRandomInt(0, 1000000);
