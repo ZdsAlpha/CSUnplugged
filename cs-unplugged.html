@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>CS Unplugged</title>
+    <!-- HTML5 Shim and Respond.js IE10 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 10]>
+		<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+		<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+		<![endif]-->
+    <!-- Meta -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <script type="text/javascript" src="data.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <!-- Favicon icon -->
+    <link rel="icon" href="assets/images/favicon.ico" type="image/x-icon">
+    <!-- fontawesome icon -->
+    <link rel="stylesheet" href="assets/fonts/fontawesome/css/fontawesome-all.min.css">
+    <!-- animation css -->
+    <link rel="stylesheet" href="assets/plugins/animation/css/animate.min.css">
+    <!-- vendor css -->
+    <link rel="stylesheet" href="assets/css/style.css">
+
+    <script>
+        function getRandomInt(min, max) {
+            min = Math.ceil(min);
+            max = Math.floor(max);
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+        }
+        class ActivityFactory {
+            constructor (target_div_name, activity_template_name){
+                this.target = target_div_name;
+                this.template = activity_template_name;
+            }
+            createActivity(title, description, link){
+                console.log(title);
+                console.log(description);
+                console.log(link);
+                var activity = $("#" + this.template).clone();
+                var id = activity.attr("id") + getRandomInt(0, 1000000);
+                var collapse_id = getRandomInt(0, 1000000);
+                activity.find("#collapse").attr("id", "collapse" + collapse_id);
+                activity.find(".t-title").attr("data-target", "#collapse" + collapse_id);
+                activity.attr("id", id);
+                activity.find(".t-title").text(title);
+                activity.find(".t-description").text(description);
+                activity.find(".t-button").click(() => window.open(link));
+                activity.css("display", "block");
+                activity.appendTo("#" + this.target);
+                return activity;
+            }
+        }
+        $(document).ready(function(){
+            window.factory = new ActivityFactory("list", "template");
+            window.data.forEach(element => {
+                window.factory.createActivity(element.title, element.desc, element.link);
+            });
+        });
+    </script>
+</head>
+
+<body>
+    <div class="auth-wrapper">
+        <div class="auth-content" style="width: 1000px;">
+            <div class="auth-bg">
+                <span class="r"></span>
+                <span class="r s"></span>
+                <span class="r s"></span>
+                <span class="r"></span>
+            </div>
+            <div class="card">
+                <div class="card-body text-center">
+                    <h3 class="mb-4">CS Unplugged Activities</h3>
+                    <div id="list">
+                        <div id="template" class="card" style="display: none;">
+                            <div class="card-header" style="text-align: left;">
+                                <h5 class="mb-0">
+                                    <a class="t-title" href="#!" data-toggle="collapse" data-target="#collapse" aria-expanded="true">Binary Numbers</a>
+                                </h5>
+                            </div>
+                            <div id="collapse" class="card-body collapse" style="text-align: left;">
+                                <p class="t-description">
+                                    The binary number system plays a central role in how information of all kinds is stored on computers. Understanding binary can lift a lot of the mystery from computers, because at a fundamental level they’re really just machines for flipping binary digits on and off. There are several activities on binary numbers in this document, all simple enough that they can be used to teach the binary system to anyone who can count! Generally children learn the binary system very quickly using this approach, but we find that many adults are also excited when they finally understand what bits and bytes really are.
+                                </p>
+                                <div style="width: 100%; text-align: right;">
+                                    <button type="button" class="btn btn-primary t-button">View ></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body" style="text-align: left;">
+                        <h5>Add Activity</h5>
+                        <hr>
+                        <div class="form-group">
+                            <label>Title</label>
+                            <input type="text" class="form-control" id="activity-title" placeholder="Activity Title">
+                        </div>
+                        <div class="form-group">
+                            <label>Description</label>
+                            <textarea class="form-control" id="activity-description" placeholder="Activity Description" rows="3"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>Link</label>
+                            <input type="text" class="form-control" id="activity-link" placeholder="Activity Link">
+                        </div>
+                        <div style="width: 100%; text-align: right;">
+                            <button class="btn btn-primary" onclick="window.factory.createActivity($('#activity-title').val(), $('#activity-description').val(), $('#activity-link').val())">Add</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Required Js -->
+    <script src="assets/js/vendor-all.min.js"></script>
+	<script src="assets/plugins/bootstrap/js/bootstrap.min.js"></script>
+
+</body>
+</html>
