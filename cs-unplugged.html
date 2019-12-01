@@ -31,9 +31,32 @@
             max = Math.floor(max);
             return Math.floor(Math.random() * (max - min + 1)) + min;
         }
+        class Controller {
+            constructor (){
+                this.target = "list"
+                this.template = "template"
+                this.factory = new ActivityFactory("template");
+            }
+            refreshActivities() {
+                window.data.forEach(element => {
+                    window.controller.createActivity(element.title, element.desc, element.link);
+                });
+            }
+            createActivity(title, description, link) {
+                var activity = this.factory.createActivity(title, description, link);
+                activity.appendTo("#" + this.target);
+                return activity;
+            }
+            deleteActivity(title) {
+                document.getElementById(this.target).childNodes.forEach((child) => {
+                    if ($(child).find(".t-title").text() == title){
+                        child.parentNode.removeChild(child);
+                    }
+                })
+            }
+        }
         class ActivityFactory {
-            constructor (target_div_name, activity_template_name){
-                this.target = target_div_name;
+            constructor (activity_template_name){
                 this.template = activity_template_name;
             }
             createActivity(title, description, link){
@@ -46,16 +69,14 @@
                 activity.find(".t-title").text(title);
                 activity.find(".t-description").text(description);
                 activity.find(".t-button").click(() => window.open(link));
+                activity.find(".d-button").click(() => window.controller.deleteActivity(title));
                 activity.css("display", "block");
-                activity.appendTo("#" + this.target);
                 return activity;
             }
         }
         $(document).ready(function(){
-            window.factory = new ActivityFactory("list", "template");
-            window.data.forEach(element => {
-                window.factory.createActivity(element.title, element.desc, element.link);
-            });
+            window.controller = new Controller();
+            window.controller.refreshActivities();
         });
     </script>
 </head>
@@ -76,14 +97,14 @@
                         <div id="template" class="card" style="display: none;">
                             <div class="card-header" style="text-align: left;">
                                 <h5 class="mb-0">
-                                    <a class="t-title" href="#!" data-toggle="collapse" data-target="#collapse" aria-expanded="true">Binary Numbers</a>
+                                    <a class="t-title" href="#!" data-toggle="collapse" data-target="#collapse" aria-expanded="true"></a>
                                 </h5>
                             </div>
                             <div id="collapse" class="card-body collapse" style="text-align: left;">
                                 <p class="t-description">
-                                    The binary number system plays a central role in how information of all kinds is stored on computers. Understanding binary can lift a lot of the mystery from computers, because at a fundamental level they’re really just machines for flipping binary digits on and off. There are several activities on binary numbers in this document, all simple enough that they can be used to teach the binary system to anyone who can count! Generally children learn the binary system very quickly using this approach, but we find that many adults are also excited when they finally understand what bits and bytes really are.
                                 </p>
-                                <div style="width: 100%; text-align: right;">
+                                <div style="width: 100%; display: flex; justify-content: space-between;">
+                                    <button type="button" class="btn btn-primary d-button" style="background-color: red;">Delete</button>
                                     <button type="button" class="btn btn-primary t-button">View ></button>
                                 </div>
                             </div>
@@ -105,7 +126,7 @@
                             <input type="text" class="form-control" id="activity-link" placeholder="Activity Link">
                         </div>
                         <div style="width: 100%; text-align: right;">
-                            <button class="btn btn-primary" onclick="window.factory.createActivity($('#activity-title').val(), $('#activity-description').val(), $('#activity-link').val())">Add</button>
+                            <button class="btn btn-primary" onclick="window.controller.createActivity($('#activity-title').val(), $('#activity-description').val(), $('#activity-link').val())">Add</button>
                         </div>
                     </div>
                 </div>
