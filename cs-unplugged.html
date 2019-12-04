@@ -54,6 +54,9 @@
                     }
                 })
             }
+            loadActivities(callback){
+                callback(callback(window.data))
+            }
         }
         class ActivityFactory {
             constructor (activity_template_name){
