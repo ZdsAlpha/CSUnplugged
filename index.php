@@ -126,6 +126,11 @@
                             </div>
                         </div>
                     </div>
+                    <br/>
+                    <h3 class="mb-4">Actions</h3>
+                    <button type="button" class="btn btn-primary t-button" style="width: 200px;" onclick="window.location.href='login.php'">Login</button>
+                    <button type="button" class="btn btn-primary t-button" style="width: 200px;" onclick="window.location.href='register.php'">Register</button>
+                    <button type="button" class="btn btn-primary t-button" style="width: 200px;" onclick="window.location.href='upload.php'">Submit Activity</button>
                 </div>
             </div>
         </div>

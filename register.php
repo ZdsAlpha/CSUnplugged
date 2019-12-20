@@ -73,6 +73,7 @@
                                 echo "<h4 style='color: green;'>Enter details!</h4>";
                             }
                         ?>
+                        <button class="btn btn-primary shadow-2 mb-4" style="background: rgb(29, 191, 115);border-color: rgb(29, 191, 115);width: 100px;" onclick="window.location.href='index.php'">Back</button>
                     </div>
                 </div>
             </form>
