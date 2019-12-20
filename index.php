@@ -3,15 +3,26 @@
 
 <head>
     <title>CS Unplugged</title>
+    <!-- HTML5 Shim and Respond.js IE10 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 10]>
+		<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+		<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+		<![endif]-->
+    <!-- Meta -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 
     <script type="text/javascript" src="data.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <!-- Favicon icon -->
     <link rel="icon" href="assets/images/favicon.ico" type="image/x-icon">
+    <!-- fontawesome icon -->
     <link rel="stylesheet" href="assets/fonts/fontawesome/css/fontawesome-all.min.css">
+    <!-- animation css -->
     <link rel="stylesheet" href="assets/plugins/animation/css/animate.min.css">
+    <!-- vendor css -->
     <link rel="stylesheet" href="assets/css/style.css">
 
     <script>
@@ -25,10 +36,14 @@
                 this.target = "list"
                 this.template = "template"
                 this.factory = new ActivityFactory("template");
+                this.visitor = new ActivityVisitor();
             }
             refreshActivities() {
-                window.data.forEach(element => {
-                    window.controller.createActivity(element.title, element.desc, element.link);
+                fetch("activities.php").then(response => response.json()).then(json => {
+                    json.forEach(activity => {
+                        activity = new ActivityObject(activity["title"], activity["intro"], "activity.php?id=" + activity["id"]);
+                        this.visitor.visit(activity);
+                    });
                 });
             }
             createActivity(title, description, link) {
@@ -64,6 +79,22 @@
                 activity.find(".d-button").click(() => window.controller.deleteActivity(title));
                 activity.css("display", "block");
                 return activity;
+            }
+        }
+        class ActivityObject{
+            constructor (title, description, link){
+                this.title = title;
+                this.desc = description;
+                this.link = link;
+            }
+            accept(visitor){
+                visitor.visit(this);
+            }
+        }
+        class ActivityVisitor{
+            constructor (){}
+            visit(activity){
+                controller.createActivity(activity.title, activity.desc, activity.link);
             }
         }
         $(document).ready(function(){
@@ -102,35 +133,14 @@
                             </div>
                         </div>
                     </div>
-                    <div class="card-body" style="text-align: left;">
-                        <h5>Add Activity</h5>
-                        <hr>
-                        <div class="form-group">
-                            <label>Title</label>
-                            <input type="text" class="form-control" id="activity-title" placeholder="Activity Title">
-                        </div>
-                        <div class="form-group">
-                            <label>Description</label>
-                            <textarea class="form-control" id="activity-description" placeholder="Activity Description" rows="3"></textarea>
-                        </div>
-                        <div class="form-group">
-                            <label>Link</label>
-                            <input type="text" class="form-control" id="activity-link" placeholder="Activity Link">
-                        </div>
-                        <div style="width: 100%; text-align: right;">
-                            <button class="btn btn-primary" onclick="window.controller.createActivity($('#activity-title').val(), $('#activity-description').val(), $('#activity-link').val())">Add</button>
-                        </div>
-                    </div>
-                </div>
-                <div class="card-body text-center">
-                    <h3 class="mb-4">Actions</h3>
-                    <div id="list">
-                    <button class="btn btn-primary" onclick="">Upload Activity</button>
-
-                    </div>
                 </div>
             </div>
         </div>
     </div>
+
+    <!-- Required Js -->
+    <script src="assets/js/vendor-all.min.js"></script>
+	<script src="assets/plugins/bootstrap/js/bootstrap.min.js"></script>
+
 </body>
 </html>

@@ -36,8 +36,15 @@
                 this.target = "list"
                 this.template = "template"
                 this.factory = new ActivityFactory("template");
+                this.visitor = new ActivityVisitor();
             }
             refreshActivities() {
+                fetch("activities.php").then(response => response.json()).then(json => {
+                    json.forEach(activity => {
+                        activity = new ActivityObject(activity["title"], activity["intro"], "activity.php?id=" + activity["id"]);
+                        this.visitor.visit(activity);
+                    });
+                });
                 window.data.forEach(element => {
                     window.controller.createActivity(element.title, element.desc, element.link);
                 });
@@ -75,6 +82,22 @@
                 activity.find(".d-button").click(() => window.controller.deleteActivity(title));
                 activity.css("display", "block");
                 return activity;
+            }
+        }
+        class ActivityObject{
+            constructor (title, description, link){
+                this.title = title;
+                this.desc = description;
+                this.link = link;
+            }
+            accept(visitor){
+                visitor.visit(this);
+            }
+        }
+        class ActivityVisitor{
+            constructor (){}
+            visit(activity){
+                controller.createActivity(activity.title, activity.desc, activity.link);
             }
         }
         $(document).ready(function(){
